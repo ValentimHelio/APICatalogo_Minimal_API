@@ -16,16 +16,24 @@ var app = builder.Build();
 
 //definir os endpoints
 
-app.MapGet("/", ()=> "Catálogo de produtos - 2025.");
+app.MapGet("/", () => "Catálogo de produtos - 2025.");
 
 
-app.MapPost("/Categorias", async(Categoria categoria, AppDBContext db) =>
+app.MapPost("/Categorias", async (Categoria categoria, AppDBContext db) =>
 {
     db.Categorias?.Add(categoria);
     await db.SaveChangesAsync();
 
     return Results.Created($"/categorias/{categoria.CategoriaId}", categoria);
 }).WithName("Criar Categoria");
+
+app.MapGet("/Categorias", async (AppDBContext db) => await db.Categorias.ToListAsync());
+
+app.MapGet("/Categorias/{id:int}", async (int id, AppDBContext db) =>
+{
+    return await db.Categorias.FindAsync(id)
+        is Categoria categoria ? Results.Ok(categoria) : Results.NotFound();
+});
 
 
 // Configure the HTTP request pipeline.
