@@ -17,7 +17,7 @@ var app = builder.Build();
 
 //definir os endpoints
 
-app.MapGet("/", () => "Catálogo de produtos - 2025.");
+app.MapGet("/", () => "Catálogo de produtos - 2025.").ExcludeFromDescription();
 
 
 app.MapPost("/Categorias", async (Categoria categoria, AppDBContext db) =>
@@ -44,7 +44,7 @@ app.MapPut("/Categorias/{id:int}", async (int id, Categoria categoria, AppDBCont
     }
 
     var categoriaDB = await db.Categorias.FindAsync(id);
-    if(categoriaDB is null)
+    if (categoriaDB is null)
     {
         return Results.NotFound();
     }
@@ -54,6 +54,21 @@ app.MapPut("/Categorias/{id:int}", async (int id, Categoria categoria, AppDBCont
 
     await db.SaveChangesAsync();
     return Results.Ok(categoria);
+});
+
+app.MapDelete("/Categorias/{id:int}", async (int id, AppDBContext db) =>
+{
+    var categoria = await db.Categorias.FindAsync(id);
+
+    if (categoria is null)
+    {
+        return Results.NotFound();
+    }
+
+    db.Categorias.Remove(categoria);
+    await db.SaveChangesAsync();
+
+    return Results.NoContent();
 });
 
 // Configure the HTTP request pipeline.
