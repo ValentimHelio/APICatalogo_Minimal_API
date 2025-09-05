@@ -1,4 +1,5 @@
 using APICatalogo.Context;
+using APICatalogo.Models;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +18,14 @@ var app = builder.Build();
 
 app.MapGet("/", ()=> "Catálogo de produtos - 2025.");
 
+
+app.MapPost("/Categorias", async(Categoria categoria, AppDBContext db) =>
+{
+    db.Categorias?.Add(categoria);
+    await db.SaveChangesAsync();
+
+    return Results.Created($"/categorias/{categoria.CategoriaId}", categoria);
+}).WithName("Criar Categoria");
 
 
 // Configure the HTTP request pipeline.
