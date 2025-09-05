@@ -1,6 +1,7 @@
 using APICatalogo.Context;
 using APICatalogo.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.CodeAnalysis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,6 +36,25 @@ app.MapGet("/Categorias/{id:int}", async (int id, AppDBContext db) =>
         is Categoria categoria ? Results.Ok(categoria) : Results.NotFound();
 });
 
+app.MapPut("/Categorias/{id:int}", async (int id, Categoria categoria, AppDBContext db) =>
+{
+    if (categoria.CategoriaId != id)
+    {
+        return Results.BadRequest();
+    }
+
+    var categoriaDB = await db.Categorias.FindAsync(id);
+    if(categoriaDB is null)
+    {
+        return Results.NotFound();
+    }
+
+    categoriaDB.Nome = categoria.Nome;
+    categoriaDB.Descricao = categoria.Descricao;
+
+    await db.SaveChangesAsync();
+    return Results.Ok(categoria);
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
