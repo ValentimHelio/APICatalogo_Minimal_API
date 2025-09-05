@@ -13,6 +13,12 @@ builder.Services.AddDbContext<AppDBContext>(options => options.UseMySql(connecti
 
 var app = builder.Build();
 
+//definir os endpoints
+
+app.MapGet("/", ()=> "Catálogo de produtos - 2025.");
+
+
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
