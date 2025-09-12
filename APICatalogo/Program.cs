@@ -1,4 +1,5 @@
 using APICatalogo.ApiEndPoints;
+using APICatalogo.AppServicesExtensions;
 using APICatalogo.Context;
 using APICatalogo.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -75,15 +76,12 @@ app.MapCategoriasEndPoints();
 app.MapProdutosEndPoints();
 
 
+var environment = app.Environment;
+app.UseExcptionHandling(environment)
+    .UseSwaggerMiddlewre()
+    .UserAppCors();
 
 
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
 
 app.UseAuthentication();
 app.UseAuthorization();
