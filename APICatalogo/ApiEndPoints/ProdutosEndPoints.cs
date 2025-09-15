@@ -14,14 +14,14 @@ public static class ProdutosEndPoints
             await db.SaveChangesAsync();
 
             return Results.Created($"/produtos/{produto.ProdutoId}", produto);
-        }).WithName("Criar Produto");
+        }).WithName("Criar Produto").WithTags("Produto");
 
         app.MapGet("/Produto", async (AppDBContext db) => await db.Produtos.ToListAsync()).WithTags("Produto").RequireAuthorization();
 
-        app.MapGet("/Pategorias/{id:int}", async (int id, AppDBContext db) =>
+        app.MapGet("/Produto/{id:int}", async (int id, AppDBContext db) =>
         {
             return await db.Produtos.FindAsync(id) is Produto produto ? Results.Ok(produto) : Results.NotFound();
-        });
+        }).WithTags("Produto");
 
         app.MapPut("/Produto/{id:int}", async (int id, Produto produto, AppDBContext db) =>
         {
@@ -46,7 +46,7 @@ public static class ProdutosEndPoints
 
             await db.SaveChangesAsync();
             return Results.Ok(produto);
-        });
+        }).WithTags("Produto");
 
         app.MapDelete("/Produto/{id:int}", async (int id, AppDBContext db) =>
         {
@@ -61,6 +61,6 @@ public static class ProdutosEndPoints
             await db.SaveChangesAsync();
 
             return Results.NoContent();
-        });
+        }).WithTags("Produto");
     }
 }

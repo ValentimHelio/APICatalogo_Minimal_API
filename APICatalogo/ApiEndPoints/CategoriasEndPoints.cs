@@ -14,14 +14,14 @@ public static class CategoriasEndPoints
             await db.SaveChangesAsync();
 
             return Results.Created($"/categorias/{categoria.CategoriaId}", categoria);
-        }).WithName("Criar Categoria");
+        }).WithName("Criar Categoria").WithTags("Categoria");
 
         app.MapGet("/Categorias", async (AppDBContext db) => await db.Categorias.ToListAsync()).WithTags("Categoria").RequireAuthorization();
 
         app.MapGet("/Categorias/{id:int}", async (int id, AppDBContext db) =>
         {
             return await db.Categorias.FindAsync(id) is Categoria categoria ? Results.Ok(categoria) : Results.NotFound();
-        });
+        }).WithTags("Categoria");
 
         app.MapPut("/Categorias/{id:int}", async (int id, Categoria categoria, AppDBContext db) =>
         {
@@ -41,7 +41,7 @@ public static class CategoriasEndPoints
 
             await db.SaveChangesAsync();
             return Results.Ok(categoria);
-        });
+        }).WithTags("Categoria");
 
         app.MapDelete("/Categorias/{id:int}", async (int id, AppDBContext db) =>
         {
@@ -56,6 +56,6 @@ public static class CategoriasEndPoints
             await db.SaveChangesAsync();
 
             return Results.NoContent();
-        });
+        }).WithTags("Categoria");
     }
 }
